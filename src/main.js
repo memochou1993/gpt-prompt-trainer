@@ -7,6 +7,7 @@ import App from './App.vue';
 import router from './router';
 import './assets/main.css';
 import 'vuetify/styles';
+import '@mdi/font/css/materialdesignicons.css';
 
 const pinia = createPinia();
 const vuetify = createVuetify({

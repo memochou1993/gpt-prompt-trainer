@@ -3,9 +3,11 @@
     <v-row no-gutters>
       <v-col class="text-center">
         Powered by
-        <a href="https://github.com/memochou1993" target="_blank" rel="noopener noreferrer">
-          Memo Chou
-        </a>
+        <span>
+          <a href="https://github.com/memochou1993" target="_blank" rel="noopener noreferrer">
+            Memo Chou
+          </a>
+        </span>
       </v-col>
     </v-row>
   </v-footer>

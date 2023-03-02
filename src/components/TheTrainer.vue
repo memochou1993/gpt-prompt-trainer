@@ -65,9 +65,9 @@ const run = async () => {
         color="blue-grey-lighten-5"
         height="100%"
       >
-        <v-card-item class="pa-8">
+        <v-card-item class="pa-8 pb-4">
           <div class="text-h5 mb-4 font-weight-bold text-indigo">
-            Test
+            Settings
           </div>
           <div class="my-4">
             <div class="text-subtitle-2 mb-2">
@@ -80,7 +80,7 @@ const run = async () => {
                 color="indigo"
                 hide-details
                 no-resize
-                rows="4"
+                rows="2"
                 variant="outlined"
                 @input="remember('systemPrompt', data.systemPrompt)"
               />
@@ -96,7 +96,7 @@ const run = async () => {
                 color="indigo"
                 hide-details
                 no-resize
-                rows="4"
+                rows="2"
                 variant="outlined"
                 @input="remember('userPrompt', data.userPrompt)"
               />
@@ -152,7 +152,7 @@ const run = async () => {
         color="blue-grey-lighten-5"
         height="100%"
       >
-        <v-card-item class="pa-8">
+        <v-card-item class="pa-8 pb-4">
           <div class="text-h5 mb-4 font-weight-bold text-indigo">
             Result
           </div>
