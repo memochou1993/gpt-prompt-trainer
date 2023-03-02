@@ -14,4 +14,8 @@ module.exports = {
       typescript: {},
     },
   },
+  rules: {
+    'no-restricted-syntax': 'off',
+    'no-promise-executor-return': 'off',
+  },
 };

@@ -1,5 +1,7 @@
+<script setup>
+import TheTrainer from '../components/TheTrainer.vue';
+</script>
+
 <template>
-  <div>
-    <h1>This is a home page</h1>
-  </div>
+  <TheTrainer />
 </template>

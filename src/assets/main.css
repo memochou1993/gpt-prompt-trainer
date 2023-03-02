@@ -1,1 +1,9 @@
 @import './base.css';
+
+html {
+  background: #78909c;
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,17 +1,17 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue';
+import { RouterView } from 'vue-router';
+import TheFooter from './components/TheFooter.vue';
+import TheHeader from './components/TheHeader.vue';
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="Hello, World!" />
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-  <RouterView />
+  <v-app>
+    <TheHeader />
+    <v-main class="bg-blue-grey-lighten-1">
+      <v-container class="py-12">
+        <RouterView />
+      </v-container>
+    </v-main>
+    <TheFooter />
+  </v-app>
 </template>
