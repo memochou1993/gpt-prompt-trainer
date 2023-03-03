@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import VueGtag from 'vue-gtag-next';
 import App from './App.vue';
 import router from './router';
 import './assets/main.css';
@@ -19,4 +20,5 @@ createApp(App)
   .use(router)
   .use(pinia)
   .use(vuetify)
+  .use(VueGtag, { property: { id: 'G-D07ELLDNWH' } })
   .mount('#app');
