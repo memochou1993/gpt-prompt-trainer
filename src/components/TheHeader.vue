@@ -11,12 +11,12 @@ import { RouterLink } from 'vue-router';
     </v-app-bar-title>
     <span class="mx-4">
       <RouterLink :to="{ name: 'home' }" active-class="font-weight-medium text-indigo-darken-4">
-        Human Mode
+        Human
       </RouterLink>
     </span>
     <span class="mx-4">
       <RouterLink :to="{ name: 'drone-host' }" active-class="font-weight-medium text-indigo-darken-4">
-        Drone Host Mode
+        Auto
       </RouterLink>
     </span>
     <span class="mx-4">
