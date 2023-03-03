@@ -9,6 +9,7 @@ import {
   ROLE_USER,
 } from '../services/openai';
 import {
+  DEFAULT_DELAY_SECONDS,
   DEFAULT_SYSTEM_MESSAGE,
   DEFAULT_USER_MESSAGE,
 } from '../constants';
@@ -19,6 +20,7 @@ const data = reactive({
   key: window.atob(localStorage.getItem('key') || ''),
   systemMessage: localStorage.getItem('systemMessage') || DEFAULT_SYSTEM_MESSAGE,
   userMessage: localStorage.getItem('userMessage') || DEFAULT_USER_MESSAGE,
+  delaySeconds: Number(localStorage.getItem('delaySeconds')) || DEFAULT_DELAY_SECONDS,
   generatedMessages: [],
 });
 
@@ -46,7 +48,7 @@ const run = async () => {
       const [choice] = choices;
       const { message } = choice;
       data.generatedMessages.push(new Message(ROLE_ASSISTANT, message.content));
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, data.delaySeconds * 1000));
     }
   } catch (err) {
     data.error = err?.response?.data?.error?.message || err.message;
@@ -103,6 +105,22 @@ const run = async () => {
                 rows="4"
                 variant="outlined"
                 @input="remember('userMessage', data.userMessage)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Delay Seconds
+            </div>
+            <div>
+              <v-text-field
+                v-model="data.delaySeconds"
+                color="indigo"
+                density="compact"
+                hide-details
+                type="number"
+                variant="outlined"
+                @input="remember('delaySeconds', data.delaySeconds)"
               />
             </div>
           </div>

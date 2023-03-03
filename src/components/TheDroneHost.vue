@@ -9,7 +9,9 @@ import {
   ROLE_USER,
 } from '../services/openai';
 import {
+  DEFAULT_DELAY_SECONDS,
   DEFAULT_DRONE_HOST_MESSAGE,
+  DEFAULT_EXPECTED_MESSAGES,
   DEFAULT_SYSTEM_MESSAGE,
   DEFAULT_USER_MESSAGE,
 } from '../constants';
@@ -21,6 +23,8 @@ const data = reactive({
   systemMessage: localStorage.getItem('systemMessage') || DEFAULT_SYSTEM_MESSAGE,
   userMessage: localStorage.getItem('userMessage') || DEFAULT_USER_MESSAGE,
   droneHostMessage: localStorage.getItem('droneHostMessage') || DEFAULT_DRONE_HOST_MESSAGE,
+  delaySeconds: Number(localStorage.getItem('delaySeconds')) || DEFAULT_DELAY_SECONDS,
+  expectedMessages: Number(localStorage.getItem('expectedMessages')) || DEFAULT_EXPECTED_MESSAGES,
   generatedMessage: '',
   userGeneratedMessages: [],
   droneHostGeneratedMessages: [],
@@ -46,7 +50,7 @@ const run = async () => {
   data.droneHostGeneratedMessages = [];
   const client = createClient(data.key);
   try {
-    for (let i = 0; i < 2; i += 1) {
+    for (let i = 0; i < data.expectedMessages / 2; i += 1) {
       const userResult = await createCompletion(client)({
         messages: userInitMessages.value.concat(data.userGeneratedMessages),
       });
@@ -59,7 +63,7 @@ const run = async () => {
       data.generatedMessage = droneHostResult.data.choices[0].message.content;
       data.userGeneratedMessages.push(new Message(ROLE_USER, data.generatedMessage));
       data.droneHostGeneratedMessages.push(new Message(ROLE_ASSISTANT, data.generatedMessage));
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, DEFAULT_DELAY_SECONDS * 1000));
     }
   } catch (err) {
     data.error = err?.response?.data?.error?.message || err.message;
@@ -132,6 +136,38 @@ const run = async () => {
                 rows="4"
                 variant="outlined"
                 @input="remember('droneHostMessage', data.droneHostMessage)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Delay Seconds
+            </div>
+            <div>
+              <v-text-field
+                v-model="data.delaySeconds"
+                color="indigo"
+                density="compact"
+                hide-details
+                type="number"
+                variant="outlined"
+                @input="remember('delaySeconds', data.delaySeconds)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Expected Messages
+            </div>
+            <div>
+              <v-text-field
+                v-model="data.expectedMessages"
+                color="indigo"
+                density="compact"
+                hide-details
+                type="number"
+                variant="outlined"
+                @input="remember('expectedMessages', data.expectedMessages)"
               />
             </div>
           </div>
