@@ -11,7 +11,7 @@ const router = createRouter({
     },
     {
       path: '/drone-host',
-      name: 'drone',
+      name: 'drone-host',
       component: () => import('../views/DroneHostView.vue'),
     },
     {
