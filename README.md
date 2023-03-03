@@ -1,3 +1,9 @@
-# gpt-prompt-trainer
+# GPT Prompt Trainer
 
-![Demo](demo.png)
+## Manual
+
+![manual](demo/manual.png)
+
+## Auto
+
+![auto](demo/auto.png)

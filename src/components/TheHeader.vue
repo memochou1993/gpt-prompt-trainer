@@ -11,7 +11,7 @@ import { RouterLink } from 'vue-router';
     </v-app-bar-title>
     <span class="mx-4">
       <RouterLink :to="{ name: 'home' }" active-class="font-weight-medium text-indigo-darken-4">
-        Human
+        Manual
       </RouterLink>
     </span>
     <span class="mx-4">
