@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/drone-host',
+      name: 'drone',
+      component: () => import('../views/DroneHostView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },

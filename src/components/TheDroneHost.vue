@@ -9,6 +9,7 @@ import {
   ROLE_USER,
 } from '../services/openai';
 import {
+  DEFAULT_DRONE_HOST_MESSAGE,
   DEFAULT_SYSTEM_MESSAGE,
   DEFAULT_USER_MESSAGE,
 } from '../constants';
@@ -19,33 +20,45 @@ const data = reactive({
   key: window.atob(localStorage.getItem('key') || ''),
   systemMessage: localStorage.getItem('systemMessage') || DEFAULT_SYSTEM_MESSAGE,
   userMessage: localStorage.getItem('userMessage') || DEFAULT_USER_MESSAGE,
-  generatedMessages: [],
+  droneHostMessage: localStorage.getItem('droneHostMessage') || DEFAULT_DRONE_HOST_MESSAGE,
+  generatedMessage: '',
+  userGeneratedMessages: [],
+  droneHostGeneratedMessages: [],
 });
 
-const initMessages = computed(() => [
+const userInitMessages = computed(() => [
   new Message(ROLE_SYSTEM, data.systemMessage),
+  new Message(ROLE_USER, data.userMessage),
 ]);
 
-const generatedMessages = computed(() => initMessages.value.concat(data.generatedMessages));
+const droneHostInitMessages = computed(() => [
+  new Message(ROLE_SYSTEM, data.droneHostMessage),
+]);
+
+const generatedMessages = computed(() => userInitMessages.value.concat(data.userGeneratedMessages));
 
 const remember = (key, value) => localStorage.setItem(key, value);
 
 const rememberKey = () => localStorage.setItem('key', window.btoa(data.key));
 
 const run = async () => {
-  data.generatedMessages = [];
+  data.userGeneratedMessages = [];
+  data.droneHostGeneratedMessages = [];
   const client = createClient(data.key);
   try {
-    const userMessages = data.userMessage.split('\n').filter((userMessage) => !!userMessage);
-    for await (const userMessage of userMessages) {
-      data.generatedMessages.push(new Message(ROLE_USER, userMessage));
-      const result = await createCompletion(client)({
-        messages: generatedMessages.value,
+    for (let i = 0; i < 2; i += 1) {
+      const userResult = await createCompletion(client)({
+        messages: userInitMessages.value.concat(data.userGeneratedMessages),
       });
-      const { choices } = result.data;
-      const [choice] = choices;
-      const { message } = choice;
-      data.generatedMessages.push(new Message(ROLE_ASSISTANT, message.content));
+      data.generatedMessage = userResult.data.choices[0].message.content;
+      data.userGeneratedMessages.push(new Message(ROLE_ASSISTANT, data.generatedMessage));
+      data.droneHostGeneratedMessages.push(new Message(ROLE_USER, data.generatedMessage));
+      const droneHostResult = await createCompletion(client)({
+        messages: droneHostInitMessages.value.concat(data.droneHostGeneratedMessages),
+      });
+      data.generatedMessage = droneHostResult.data.choices[0].message.content;
+      data.userGeneratedMessages.push(new Message(ROLE_USER, data.generatedMessage));
+      data.droneHostGeneratedMessages.push(new Message(ROLE_ASSISTANT, data.generatedMessage));
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   } catch (err) {
@@ -103,6 +116,22 @@ const run = async () => {
                 rows="4"
                 variant="outlined"
                 @input="remember('userMessage', data.userMessage)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Drone Host Messages
+            </div>
+            <div>
+              <v-textarea
+                v-model="data.droneHostMessage"
+                color="indigo"
+                hide-details
+                no-resize
+                rows="4"
+                variant="outlined"
+                @input="remember('droneHostMessage', data.droneHostMessage)"
               />
             </div>
           </div>

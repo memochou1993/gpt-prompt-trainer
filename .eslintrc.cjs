@@ -15,7 +15,9 @@ module.exports = {
     },
   },
   rules: {
+    'vue/max-len': 'off',
     'no-restricted-syntax': 'off',
     'no-promise-executor-return': 'off',
+    'no-await-in-loop': 'off',
   },
 };
