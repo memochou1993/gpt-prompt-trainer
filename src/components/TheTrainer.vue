@@ -9,8 +9,10 @@ import {
   ROLE_USER,
 } from '../services/openai';
 import {
+  DEFAULT_ASSISTANT_MESSAGE,
   DEFAULT_DELAY_SECONDS,
   DEFAULT_SYSTEM_MESSAGE,
+  DEFAULT_TEST_MESSAGE,
   DEFAULT_USER_MESSAGE,
 } from '../constants';
 import { Message } from '../models';
@@ -20,12 +22,16 @@ const data = reactive({
   key: window.atob(localStorage.getItem('key') || ''),
   systemMessage: localStorage.getItem('systemMessage') || DEFAULT_SYSTEM_MESSAGE,
   userMessage: localStorage.getItem('userMessage') || DEFAULT_USER_MESSAGE,
+  assistantMessage: localStorage.getItem('assistantMessage') || DEFAULT_ASSISTANT_MESSAGE,
+  testMessage: localStorage.getItem('testMessage') || DEFAULT_TEST_MESSAGE,
   delaySeconds: Number(localStorage.getItem('delaySeconds')) || DEFAULT_DELAY_SECONDS,
   generatedMessages: [],
 });
 
 const initMessages = computed(() => [
   new Message(ROLE_SYSTEM, data.systemMessage),
+  new Message(ROLE_USER, data.userMessage),
+  new Message(ROLE_ASSISTANT, data.assistantMessage),
 ]);
 
 const generatedMessages = computed(() => initMessages.value.concat(data.generatedMessages));
@@ -38,9 +44,9 @@ const run = async () => {
   data.generatedMessages = [];
   const client = createClient(data.key);
   try {
-    const userMessages = data.userMessage.split('\n').filter((userMessage) => !!userMessage);
-    for await (const userMessage of userMessages) {
-      data.generatedMessages.push(new Message(ROLE_USER, userMessage));
+    const testMessages = data.testMessage.split('\n').filter((testMessage) => !!testMessage);
+    for await (const testMessage of testMessages) {
+      data.generatedMessages.push(new Message(ROLE_USER, testMessage));
       const result = await createCompletion(client)({
         messages: generatedMessages.value,
       });
@@ -105,6 +111,38 @@ const run = async () => {
                 rows="4"
                 variant="outlined"
                 @input="remember('userMessage', data.userMessage)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Assistant Messages
+            </div>
+            <div>
+              <v-textarea
+                v-model="data.assistantMessage"
+                color="indigo"
+                hide-details
+                no-resize
+                rows="4"
+                variant="outlined"
+                @input="remember('assistantMessage', data.assistantMessage)"
+              />
+            </div>
+          </div>
+          <div class="my-4">
+            <div class="text-subtitle-2 mb-2">
+              Test Messages
+            </div>
+            <div>
+              <v-textarea
+                v-model="data.testMessage"
+                color="indigo"
+                hide-details
+                no-resize
+                rows="4"
+                variant="outlined"
+                @input="remember('testMessage', data.testMessage)"
               />
             </div>
           </div>
